@@ -1,0 +1,19 @@
+# The main pipeline for project_db_bundle
+
+resources:
+  pipelines:
+    bronze_to_silver:
+      name: bronze_to_silver
+      configuration:
+        catalog_name: ${var.catalog}
+      libraries:
+        - glob:
+            include: ../src/DLT_pipelines/bronze_to_silver/transformations/**
+      schema: silver
+      continuous: false
+      root_path: ../src/DLT_pipelines/bronze_to_silver
+      environment:
+        dependencies:
+          # We include every dependency defined by pyproject.toml by defining an editable environment
+          # that points to the folder where pyproject.toml is deployed.
+          - --editable ${workspace.file_path}
